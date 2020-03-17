@@ -1,0 +1,30 @@
+body {
+  background-color: rgb(223, 223, 223);
+  font-family: 'Montserrat', sans-serif;
+}
+
+h3 {
+  color: #FE7DA9;
+}
+
+.exercise {
+  margin: 4vh;
+  padding: 2vh;
+  min-height: 10vh;
+  box-shadow: 1px 1px 3px black;
+}
+
+.box {
+  width: 50px;
+  height: 50px;
+}
+
+#ex-1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+#calculations {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
