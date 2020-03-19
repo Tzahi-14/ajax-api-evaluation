@@ -1,50 +1,34 @@
 const $ = require('cheerio')
 const path = require('path')
 
-const selectElements = function (html) {
-  const firstPost = $('.todo', html)[0].attribs
-  return firstPost
-}
-
 
 describe('exercise-2', () => {
   beforeAll(async () => {
     await page.goto('file://' + path.join(__dirname, '..', '..', 'src', 'index.html'))
   })
 
-  // it(`Should calculate the amount of 'box'es on the web page and add the number as a p to the div with an id of 'total`, async function (done) {
-  //   await page.click('#calc-total')
-  //   const html = await page.content()
-  //   const boxes = $('.box', html)
-  //   const paragraphs = $('#total p', html)
+  it(`You should append a 'p' element to the 'div' with id 'result' letting the user know the breed was 'not found' if the user enters a breed that is not valid.`, async function (done) {
 
-  //   const total = paragraphs[paragraphs.length - 1].children[0].data
-  //   expect(boxes.length, `could not find any elements with a class of 'box' on the web page`).toBe(parseInt(total))
+    let html = await page.content()
+    const pElem = $('#result p', html)
+    expect(pElem.length, `There was a p element in the div with id 'result' before initiating the search. Make sure to make the API request only when the user clicks the search button and append the error message only when there is an error`).toBe(0)
 
-  //   done()
-  // })
+    const searchValue = 'h'
+    await page.evaluate((searchValue) => {
+      document.querySelector('#breed-input').value = searchValue
+    }, searchValue)
+    await page.click('#search')
+    await page.waitFor(4000)
+    html = await page.content()
 
-  it(`Should calculate the amount of 'box'es on the web page and add the number as a p to the div with an id of 'total`, async function (done) {
-    const numDivs = Math.floor(Math.random() * 30)
-    await page.evaluate((numDivs) => {
-      const boxes = document.getElementById('boxes')
-      boxes.innerHTML = ''
+    const text = $('#result p', html).text().toLowerCase()
+    let includesErrorText = false
 
-      for (let i = 0; i < numDivs; i++) {
-        const box = document.createElement('div')
-        box.className = 'box'
-        box.innerHTML = Math.floor(Math.random() * 100)
-        boxes.appendChild(box)
-      }
-    }, numDivs)
+    if (text.includes('not') && text.includes('found')) {
+      includesErrorText = true
+    }
 
-    await page.click('#calc-total')
-    const html = await page.content()
-    const boxes = $('.box', html)
-    const paragraphs = $('#total p', html)
-
-    const total = paragraphs[paragraphs.length - 1].children[0].data
-    expect(total, `when adding ${numDivs} divs to the web page the total that is found is ${total} instead of ${numDivs}`).toBe(`${numDivs}`)
+    expect(includesErrorText, `The 'p' element did not have an error message inside when searching for an invalid input such as '${searchValue}', make sure to add a 'p' element with the message "Breed not found - try again" if there is an 'error' with the API request`).toBeTruthy()
     done()
   })
 

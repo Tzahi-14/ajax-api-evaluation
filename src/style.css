@@ -28,3 +28,11 @@ h3 {
   display: grid;
   grid-template-rows: 1fr 1fr;
 }
+
+#result {
+  min-height: 70vh;
+  display: grid;
+  margin: 10px;
+  justify-content: center;
+  align-content: center;
+}

@@ -1,32 +1,17 @@
-const calculateTotal = function () {
-  const boxes = document.getElementsByClassName('box')
-
-  const length = document.createElement('p')
-  length.innerHTML = boxes.length
-  document.getElementById('total').appendChild(length)
+const success = function (image) {
+  $('#result').empty().append(`<img src="${image.message}" />`)
 }
 
-
-const calculateSum = function () {
-  const boxes = document.getElementsByClassName('box')
-
-  let sum = 0
-  for (let box of boxes) {
-    sum += parseInt(box.innerHTML)
-  }
-
-  const sumElem = document.createElement('p')
-  sumElem.innerHTML = sum
-  document.getElementById('sum').appendChild(sumElem)
+const error = function (err) {
+  $('#result').empty().append('<p>Breed not found - try again.</p>')
 }
 
-
-const calcTotal = document.getElementById('calc-total')
-calcTotal.addEventListener('click', function () {
-  calculateTotal()
-})
-
-const calcSum = document.getElementById('calc-sum')
-calcSum.addEventListener('click', function () {
-  calculateSum()
+$('#search').on('click', function () {
+  const input = $('#breed-input').val()
+  $.ajax({
+    url: `https://dog.ceo/api/breed/${input}/images/random`,
+    method: 'GET',
+    success,
+    error
+  })
 })
